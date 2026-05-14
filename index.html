@@ -360,7 +360,7 @@ function render(){
 
   backBtn.style.display = current===0 ? 'none' : 'inline-block';
 
-  nextBtn.addEventListener('click', () => {
+nextBtn.addEventListener('click', () => {
 
   if (answers[current] === null) return;
 
@@ -370,9 +370,9 @@ function render(){
     return;
   }
 
-  // Próxima pergunta
   current++;
   render();
+
 });
 
 backBtn.addEventListener('click',()=>{
