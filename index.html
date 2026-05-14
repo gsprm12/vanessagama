@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-9" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Teste de Temperamentos</title>
+<style>
+  :root{
+    --bg:#f7f7fb; --card:#fff; --primary:#6b46c1; --muted:#6b7280;
+    --accent:#ffd166;
+  }
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Arial}
+  body{margin:0;background:var(--bg);color:#111;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+  .wrap{width:100%;max-width:820px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  header h1{margin:0;font-size:20px;color:var(--primary)}
+  .card{background:var(--card);border-radius:12px;padding:26px;box-shadow:0 6px 20px rgba(13,16,35,0.06)}
+  .progress{height:10px;background:#e9e9ef;border-radius:999px;overflow:hidden;margin-bottom:18px}
+  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),#9f7aea);transition:width .35s}
+  .qnum{font-size:13px;color:var(--muted);margin-bottom:8px}
+  h2.question{margin:6px 0 18px 0;font-size:18px}
+  .options{display:grid;gap:10px}
+  .option{
+    background:#fbfbfe;border:1px solid #eee;padding:12px;border-radius:10px;cursor:pointer;
+    transition:transform .08s,box-shadow .08s;
+  }
+  .option.selected{box-shadow:0 8px 30px rgba(99,102,241,0.12);transform:translateY(-3px);border-color:rgba(107,70,193,0.15)}
+  .controls{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+  button{background:var(--primary);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+  button.ghost{background:transparent;color:var(--muted);border:1px solid #ececec}
+  .hidden{display:none}
+  .result{padding:18px;text-align:center}
+  .result h2{margin:6px 0 10px 0}
+  .desc{color:var(--muted);line-height:1.5}
+  .result img{max-width:240px;margin:20px auto;display:block}
+  footer.small{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+  .hero{text-align:center}
+  .hero img{max-width:100%;border-radius:12px}
+  .hero button{margin-top:20px;padding:12px 24px;font-size:16px;border-radius:8px;background:var(--primary);color:#fff;border:0;cursor:pointer}
+  @media(max-width:520px){.card{padding:18px}.controls{flex-direction:column-reverse;align-items:stretch}button{width:100%}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- CAPA -->
+    <div class="card" id="capaCard">
+      <div class="hero">
+        <img src="Venha comigo descobrir seu temperamento.svg" alt="Capa do teste">
+        <br>
+        <button onclick="iniciarQuiz()">Quero Descobrir</button>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card hidden" id="quizCard">
+      <div class="progress"><div class="bar" id="progressBar"></div></div>
+      <div class="qnum" id="qnum">Pergunta 1 de 9</div>
+      <h2 class="question" id="questionText">Texto da pergunta</h2>
+      <div class="options" id="optionsList"></div>
+      <div class="controls">
+        <button class="ghost" id="backBtn">Voltar</button>
+        <button id="nextBtn">Próxima</button>
+      </div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="card hidden" id="resultCard">
+      <div class="result">
+        <h2 id="resultTitle">Seu temperamento</h2>
+        <img src="Viviane Carvalho Instagram @viviacarvalho__.svg" alt="Resultado">
+        <p class="desc" id="resultText"></p>
+        <div style="margin-top:14px">
+          <button id="restartBtn">Fazer de novo</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="small">Feito por você — edite perguntas e textos no arquivo <code>index.html</code></footer>
+  </div>
+
+<script>
+/* ========== Perguntas e pontuação ========== */
+const questions = [
+  { q:"Quando você participa de um grupo, você costuma:", options:[
+    {t:"Sanguíneo", txt:"Conversar animado e ser o centro da roda"},
+    {t:"Colérico", txt:"Tomar a dianteira e organizar as tarefas"},
+    {t:"Melancólico", txt:"Observar e planejar antes de falar"},
+    {t:"Fleumático", txt:"Manter a calma e apoiar discretamente"}
+  ]},
+  { q:"Num projeto, você se sente mais confortável:", options:[
+    {t:"Sanguíneo", txt:"Trazendo ideias novas e criatividade"},
+    {t:"Colérico", txt:"Definindo metas e prazos claros"},
+    {t:"Melancólico", txt:"Cuidando dos detalhes e qualidade"},
+    {t:"Fleumático", txt:"Garantindo harmonia no time"}
+  ]},
+  { q:"Sua reação em conflitos geralmente é:", options:[
+    {t:"Sanguíneo", txt:"Tentar descontrair e aliviar a tensão"},
+    {t:"Colérico", txt:"Encarar o problema de frente"},
+    {t:"Melancólico", txt:"Refletir antes de reagir"},
+    {t:"Fleumático", txt:"Evitar confronto e acalmar as partes"}
+  ]},
+  { q:"Você prefere trabalhar:", options:[
+    {t:"Sanguíneo", txt:"Em tarefas sociais e dinâmicas"},
+    {t:"Colérico", txt:"Em liderança ou decisões importantes"},
+    {t:"Melancólico", txt:"Em análise e qualidade técnica"},
+    {t:"Fleumático", txt:"Com rotina estável e previsível"}
+  ]},
+  { q:"Num evento, as pessoas te descrevem como:", options:[
+    {t:"Sanguíneo", txt:"Extrovertido e comunicativo"},
+    {t:"Colérico", txt:"Enérgico e direto"},
+    {t:"Melancólico", txt:"Reservado e organizado"},
+    {t:"Fleumático", txt:"Calmo e confiável"}
+  ]},
+  { q:"Ao tomar decisões você costuma:", options:[
+    {t:"Sanguíneo", txt:"Seguir a intuição e o sentimento do momento"},
+    {t:"Colérico", txt:"Agir rapidamente e com firmeza"},
+    {t:"Melancólico", txt:"Pesquisar e avaliar opções"},
+    {t:"Fleumático", txt:"Consultar outros e manter equilíbrio"}
+  ]},
+  { q:"O que te motiva mais no trabalho?", options:[
+    {t:"Sanguíneo", txt:"Interação social e reconhecimento"},
+    {t:"Colérico", txt:"Resultados e desafios"},
+    {t:"Melancólico", txt:"Qualidade e perfeição"},
+    {t:"Fleumático", txt:"Estabilidade e cooperação"}
+  ]},
+  { q:"Você se descreve como alguém que:", options:[
+    {t:"Sanguíneo", txt:"Empolga fácil outras pessoas"},
+    {t:"Colérico", txt:"Assume a responsabilidade"},
+    {t:"Melancólico", txt:"Preocupa-se com o certo e o errado"},
+    {t:"Fleumático", txt:"Procura manter a paz"}
+  ]}
+];
+  { q:"Quando você está em uma situação inesperada, o que faz mais sentido pra você?", options:[
+    {t:"Sanguíneo", txt:"Tento deixar o ambiente leve, buscando conversar e distrair"},
+    {t:"Colérico", txt:"Tomo a frente e decido rápido, mesmo que depois eu ajuste"},
+    {t:"Melancólico", txt:"Penso bem antes de agir, analisando os detalhes"},
+    {t:"Fleumático", txt:"Mantenho a calma e espero as coisas se organizarem "}
+  ]}
+];
+
+/* textos finais */
+const resultTexts = {
+  "Sanguíneo": {
+    title:"Sanguíneo",
+    text:"Você é sociável, entusiasmado e comunicativo. Gosta de novidades, fazer amigos e liderar conversas. Às vezes pode ser impulsivo, mas traz energia pro grupo."
+  },
+  "Colérico": {
+    title:"Colérico",
+    text:"Você é decidido, focado em resultados e líder por natureza. Gosta de controlar e alcançar metas. Pode ser direto, prefere ação a deliberação longa."
+  },
+  "Melancólico": {
+    title:"Melancólico",
+    text:"Você é analítico, detalhista e busca qualidade. Planeja e se importa com profundidade. Às vezes pode ser perfeccionista ou reservado."
+  },
+  "Fleumático": {
+    title:"Fleumático",
+    text:"Você é calmo, paciente e confiável. Prefere harmonia e rotina. Atua bem como apoio e evita conflitos desnecessários."
+  }
+};
+
+/* ========== lógica do quiz ========== */
+let current = 0;
+const answers = new Array(questions.length).fill(null);
+
+const qnum = document.getElementById('qnum');
+const qText = document.getElementById('questionText');
+const optionsList = document.getElementById('optionsList');
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+const progressBar = document.getElementById('progressBar');
+const quizCard = document.getElementById('quizCard');
+const resultCard = document.getElementById('resultCard');
+const resultTitle = document.getElementById('resultTitle');
+const resultText = document.getElementById('resultText');
+const restartBtn = document.getElementById('restartBtn');
+const capaCard = document.getElementById('capaCard');
+
+function render(){
+  if(current >= questions.length){
+    showResult();
+    return;
+  }
+  qnum.textContent = `Pergunta ${current+1} de ${questions.length}`;
+  const progressPercent = Math.round((current/questions.length)*100);
+  progressBar.style.width = progressPercent + '%';
+
+  const item = questions[current];
+  qText.textContent = item.q;
+  optionsList.innerHTML = '';
+  item.options.forEach((opt,i)=>{
+    const div=document.createElement('div');
+    div.className='option'+(answers[current]===i?' selected':'');
+    div.textContent=opt.txt;
+    div.onclick=()=>{
+      answers[current]=i;
+      Array.from(optionsList.children).forEach((c,idx)=>c.classList.toggle('selected',idx===i));
+      nextBtn.disabled=false;
+    };
+    optionsList.appendChild(div);
+  });
+
+  backBtn.style.display=(current===0?'none':'inline-block');
+  nextBtn.textContent=(current===questions.length-1?'Ver resultado':'Próxima');
+  nextBtn.disabled=(answers[current]===null);
+}
+
+nextBtn.addEventListener('click',()=>{
+  if(answers[current]===null) return;
+  current++;
+  if(current<=questions.length) render();
+});
+
+backBtn.addEventListener('click',()=>{
+  if(current>0) current--;
+  render();
+});
+
+function showResult(){
+  const totals={"Sanguíneo":0,"Colérico":0,"Melancólico":0,"Fleumático":0};
+  answers.forEach((ans,qIndex)=>{
+    if(ans==null) return;
+    const t=questions[qIndex].options[ans].t;
+    totals[t]=(totals[t]||0)+1;
+  });
+  const maxVal=Math.max(...Object.values(totals));
+  const winners=Object.keys(totals).filter(k=>totals[k]===maxVal);
+
+  let title,text;
+  if(winners.length===1){
+    title=resultTexts[winners[0]].title;
+    text=resultTexts[winners[0]].text;
+  } else {
+    title=winners.join(' + ');
+    text=winners.map(w=>`${resultTexts[w].title}: ${resultTexts[w].text}`).join('\n\n');
+  }
+
+  quizCard.classList.add('hidden');
+  resultCard.classList.remove('hidden');
+  resultTitle.textContent=title;
+  resultText.textContent=text;
+}
+
+restartBtn.addEventListener('click',()=>{
+  for(let i=0;i<answers.length;i++) answers[i]=null;
+  current=0;
+  resultCard.classList.add('hidden');
+  capaCard.classList.remove('hidden');
+});
+
+function iniciarQuiz(){
+  capaCard.classList.add('hidden');
+  quizCard.classList.remove('hidden');
+  render();
+}
+</script>
+</body>
+</html>
