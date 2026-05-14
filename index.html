@@ -360,14 +360,17 @@ function render(){
 
   backBtn.style.display = current===0 ? 'none' : 'inline-block';
 
-  nextBtn.textContent =
-    current===questions.length-1 ? 'Ver resultado' : 'Próxima';
+  nextBtn.addEventListener('click', () => {
 
-  nextBtn.disabled = answers[current]===null;
-}
+  if (answers[current] === null) return;
 
-nextBtn.addEventListener('click',()=>{
-  if(answers[current]===null) return;
+  // Última pergunta
+  if (current === questions.length - 1) {
+    showResult();
+    return;
+  }
+
+  // Próxima pergunta
   current++;
   render();
 });
@@ -410,6 +413,16 @@ function iniciarQuiz(){
   render();
 }
 
+function showResult() {
+
+  let resultadoHTML = `
+    <h2>Resultado do Teste</h2>
+    <p>Seu teste foi concluído com sucesso 🎉</p>
+  `;
+
+  quizContainer.innerHTML = resultadoHTML;
+}  
+  
 </script>
 
 </body>
