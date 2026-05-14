@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Teste de Temperamentos</title>
 
@@ -11,11 +11,12 @@
     --card:#fff;
     --primary:#6b46c1;
     --muted:#6b7280;
+    --accent:#ffd166;
   }
 
   *{
     box-sizing:border-box;
-    font-family:Inter,Arial,sans-serif;
+    font-family:Inter,ui-sans-serif,system-ui,Arial;
   }
 
   body{
@@ -23,6 +24,8 @@
     background:var(--bg);
     color:#111;
     display:flex;
+    min-height:100vh;
+    align-items:center;
     justify-content:center;
     padding:24px;
   }
@@ -34,45 +37,14 @@
 
   .card{
     background:var(--card);
-    border-radius:16px;
+    border-radius:12px;
     padding:26px;
     box-shadow:0 6px 20px rgba(13,16,35,0.06);
   }
 
-  .hidden{
-    display:none;
-  }
-
-  /* CAPA */
-  .hero{
-    text-align:center;
-  }
-
-  .hero img{
-    width:100%;
-    border-radius:14px;
-  }
-
-  .hero button{
-    margin-top:20px;
-    padding:14px 28px;
-    border:none;
-    border-radius:12px;
-    background:var(--primary);
-    color:#fff;
-    font-size:18px;
-    cursor:pointer;
-    font-weight:bold;
-  }
-
-  .hero button:hover{
-    opacity:.92;
-  }
-
-  /* QUIZ */
   .progress{
     height:10px;
-    background:#ececf3;
+    background:#e9e9ef;
     border-radius:999px;
     overflow:hidden;
     margin-bottom:18px;
@@ -81,41 +53,33 @@
   .bar{
     height:100%;
     width:0%;
-    background:linear-gradient(90deg,#6b46c1,#9f7aea);
-    transition:0.3s;
+    background:linear-gradient(90deg,var(--primary),#9f7aea);
+    transition:width .35s;
   }
 
   .qnum{
-    font-size:14px;
+    font-size:13px;
     color:var(--muted);
-    margin-bottom:10px;
-  }
-
-  /* IMAGEM DAS PERGUNTAS */
-  .question-image{
-    width:100%;
-    border-radius:14px;
-    margin-bottom:18px;
-    display:block;
+    margin-bottom:8px;
   }
 
   h2.question{
-    margin:0 0 18px;
-    font-size:22px;
+    margin:6px 0 18px 0;
+    font-size:18px;
   }
 
   .options{
     display:grid;
-    gap:12px;
+    gap:10px;
   }
 
   .option{
-    background:#fafafe;
-    border:1px solid #ececf3;
-    padding:14px;
-    border-radius:12px;
+    background:#fbfbfe;
+    border:1px solid #eee;
+    padding:12px;
+    border-radius:10px;
     cursor:pointer;
-    transition:0.2s;
+    transition:.2s;
   }
 
   .option:hover{
@@ -123,73 +87,86 @@
   }
 
   .option.selected{
-    border-color:#6b46c1;
-    background:#f4efff;
+    box-shadow:0 8px 30px rgba(99,102,241,0.12);
+    transform:translateY(-3px);
+    border-color:rgba(107,70,193,0.15);
   }
 
   .controls{
     display:flex;
     gap:10px;
     justify-content:flex-end;
-    margin-top:20px;
+    margin-top:18px;
   }
 
   button{
-    border:none;
-    padding:12px 18px;
+    background:var(--primary);
+    color:#fff;
+    border:0;
+    padding:10px 14px;
     border-radius:10px;
     cursor:pointer;
-    font-weight:bold;
   }
 
-  #nextBtn{
-    background:#6b46c1;
-    color:#fff;
+  button.ghost{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid #ececec;
   }
 
-  #backBtn{
-    background:#ececf3;
+  .hidden{display:none;}
+
+  .question-img{
+    width:100%;
+    max-height:220px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:12px;
   }
 
-  /* RESULTADO */
   .result{
+    padding:18px;
     text-align:center;
   }
 
   .result img{
-    max-width:260px;
-    width:100%;
-    border-radius:14px;
+    max-width:240px;
     margin:20px auto;
     display:block;
   }
 
   .desc{
     color:var(--muted);
-    line-height:1.6;
+    line-height:1.5;
     white-space:pre-line;
   }
 
-  footer{
-    margin-top:14px;
+  .hero{
     text-align:center;
-    color:var(--muted);
+  }
+
+  .hero img{
+    max-width:100%;
+    border-radius:12px;
+  }
+
+  .hero button{
+    margin-top:20px;
+    padding:12px 24px;
+    font-size:16px;
+  }
+
+  footer.small{
     font-size:12px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:12px;
   }
 
   @media(max-width:520px){
-
-    .card{
-      padding:18px;
-    }
-
-    .controls{
-      flex-direction:column-reverse;
-    }
-
-    button{
-      width:100%;
-    }
+    .card{padding:18px;}
+    .controls{flex-direction:column-reverse;align-items:stretch;}
+    button{width:100%;}
   }
 </style>
 </head>
@@ -200,19 +177,11 @@
 
   <!-- CAPA -->
   <div class="card" id="capaCard">
-
     <div class="hero">
-
-      <img
-        src="Venha comigo descobrir seu temperamento.png"
-        alt="Capa do teste">
-
-      <button onclick="iniciarQuiz()">
-        Quero Descobrir
-      </button>
-
+      <img src="venha-comigo-descobrir-seu-temperamento.png" alt="Capa do teste">
+      <br>
+      <button onclick="iniciarQuiz()">Quero Descobrir</button>
     </div>
-
   </div>
 
   <!-- QUIZ -->
@@ -224,19 +193,14 @@
 
     <div class="qnum" id="qnum"></div>
 
-    <!-- IMAGEM DA PERGUNTA -->
-    <img
-      id="questionImage"
-      class="question-image"
-      src=""
-      alt="Imagem da pergunta">
+    <img id="questionImage" class="question-img" style="display:none">
 
     <h2 class="question" id="questionText"></h2>
 
     <div class="options" id="optionsList"></div>
 
     <div class="controls">
-      <button id="backBtn">Voltar</button>
+      <button class="ghost" id="backBtn">Voltar</button>
       <button id="nextBtn">Próxima</button>
     </div>
 
@@ -249,356 +213,201 @@
 
       <h2 id="resultTitle"></h2>
 
-      <img
-        src="Viviane Carvalho Instagram @viviacarvalho__.svg"
-        alt="Resultado">
+      <img src="viviane-carvalho-instagram.png" alt="Resultado">
 
       <p class="desc" id="resultText"></p>
 
-      <button id="restartBtn">
-        Fazer novamente
-      </button>
+      <button id="restartBtn">Fazer novamente</button>
 
     </div>
 
   </div>
 
-  <footer>
-    Feito por você ✨
+  <footer class="small">
+    Analista de Temperamento - Viviane Carvalho
   </footer>
 
 </div>
 
 <script>
 
-/* =========================
-   PERGUNTAS
-========================= */
-
-const questions = [
-
-{
-q:"Quando você participa de um grupo, você costuma:",
-img:"pergunta1.jpg",
-options:[
-{t:"Sanguíneo", txt:"Conversar animado e ser o centro da roda"},
-{t:"Colérico", txt:"Tomar a dianteira e organizar as tarefas"},
-{t:"Melancólico", txt:"Observar e planejar antes de falar"},
-{t:"Fleumático", txt:"Manter a calma e apoiar discretamente"}
-]
-},
-
-{
-q:"Num projeto, você se sente mais confortável:",
-img:"pergunta2.jpg",
-options:[
-{t:"Sanguíneo", txt:"Trazendo ideias novas e criatividade"},
-{t:"Colérico", txt:"Definindo metas e prazos claros"},
-{t:"Melancólico", txt:"Cuidando dos detalhes e qualidade"},
-{t:"Fleumático", txt:"Garantindo harmonia no time"}
-]
-},
-
-{
-q:"Sua reação em conflitos geralmente é:",
-img:"pergunta3.jpg",
-options:[
-{t:"Sanguíneo", txt:"Tentar descontrair e aliviar a tensão"},
-{t:"Colérico", txt:"Encarar o problema de frente"},
-{t:"Melancólico", txt:"Refletir antes de reagir"},
-{t:"Fleumático", txt:"Evitar confronto e acalmar as partes"}
-]
-},
-
-{
-q:"Você prefere trabalhar:",
-img:"pergunta4.jpg",
-options:[
-{t:"Sanguíneo", txt:"Em tarefas sociais e dinâmicas"},
-{t:"Colérico", txt:"Em liderança ou decisões importantes"},
-{t:"Melancólico", txt:"Em análise e qualidade técnica"},
-{t:"Fleumático", txt:"Com rotina estável e previsível"}
-]
-},
-
-{
-q:"Num evento, as pessoas te descrevem como:",
-img:"pergunta5.jpg",
-options:[
-{t:"Sanguíneo", txt:"Extrovertido e comunicativo"},
-{t:"Colérico", txt:"Enérgico e direto"},
-{t:"Melancólico", txt:"Reservado e organizado"},
-{t:"Fleumático", txt:"Calmo e confiável"}
-]
-},
-
-{
-q:"Ao tomar decisões você costuma:",
-img:"pergunta6.jpg",
-options:[
-{t:"Sanguíneo", txt:"Seguir a intuição e o sentimento do momento"},
-{t:"Colérico", txt:"Agir rapidamente e com firmeza"},
-{t:"Melancólico", txt:"Pesquisar e avaliar opções"},
-{t:"Fleumático", txt:"Consultar outros e manter equilíbrio"}
-]
-},
-
-{
-q:"O que te motiva mais no trabalho?",
-img:"pergunta7.jpg",
-options:[
-{t:"Sanguíneo", txt:"Interação social e reconhecimento"},
-{t:"Colérico", txt:"Resultados e desafios"},
-{t:"Melancólico", txt:"Qualidade e perfeição"},
-{t:"Fleumático", txt:"Estabilidade e cooperação"}
-]
-},
-
-{
-q:"Você se descreve como alguém que:",
-img:"pergunta8.jpg",
-options:[
-{t:"Sanguíneo", txt:"Empolga fácil outras pessoas"},
-{t:"Colérico", txt:"Assume a responsabilidade"},
-{t:"Melancólico", txt:"Preocupa-se com o certo e o errado"},
-{t:"Fleumático", txt:"Procura manter a paz"}
-]
-},
-
-{
-q:"Quando você está em uma situação inesperada, o que faz mais sentido pra você?",
-img:"pergunta9.jpg",
-options:[
-{t:"Sanguíneo", txt:"Tento deixar o ambiente leve"},
-{t:"Colérico", txt:"Tomo a frente rapidamente"},
-{t:"Melancólico", txt:"Analiso antes de agir"},
-{t:"Fleumático", txt:"Mantenho a calma"}
-]
-}
-
+const questionImages = [
+  "pergunta1.jpg",
+  "pergunta2.jpg",
+  "pergunta3.jpg",
+  "pergunta4.jpg",
+  "pergunta5.jpg",
+  "pergunta6.jpg",
+  "pergunta7.jpg",
+  "pergunta8.jpg",
+  "pergunta9.jpg"
 ];
 
-/* =========================
-   RESULTADOS
-========================= */
-
-const resultTexts = {
-
-"Sanguíneo":{
-title:"Sanguíneo",
-text:"Você é sociável, criativo e cheio de energia. Sua presença ilumina ambientes como um letreiro de neon em noite chuvosa ✨"
-},
-
-"Colérico":{
-title:"Colérico",
-text:"Você é determinado, forte e orientado a resultados. Quando decide algo, transforma obstáculos em degraus."
-},
-
-"Melancólico":{
-title:"Melancólico",
-text:"Você é analítico, profundo e detalhista. Enxerga nuances onde muita gente vê apenas superfície."
-},
-
-"Fleumático":{
-title:"Fleumático",
-text:"Você é calmo, confiável e equilibrado. Sua presença funciona como porto seguro em meio ao caos."
-}
-
-};
-
-/* =========================
-   LÓGICA
-========================= */
+const questions = [
+  { q:"Quando você participa de um grupo, você costuma:", options:[
+    {t:"Sanguíneo", txt:"Conversar animado e ser o centro da roda"},
+    {t:"Colérico", txt:"Tomar a dianteira e organizar as tarefas"},
+    {t:"Melancólico", txt:"Observar e planejar antes de falar"},
+    {t:"Fleumático", txt:"Manter a calma e apoiar discretamente"}
+  ]},
+  { q:"Num projeto, você se sente mais confortável:", options:[
+    {t:"Sanguíneo", txt:"Trazendo ideias novas e criatividade"},
+    {t:"Colérico", txt:"Definindo metas e prazos claros"},
+    {t:"Melancólico", txt:"Cuidando dos detalhes e qualidade"},
+    {t:"Fleumático", txt:"Garantindo harmonia no time"}
+  ]},
+  { q:"Sua reação em conflitos geralmente é:", options:[
+    {t:"Sanguíneo", txt:"Tentar descontrair e aliviar a tensão"},
+    {t:"Colérico", txt:"Encarar o problema de frente"},
+    {t:"Melancólico", txt:"Refletir antes de reagir"},
+    {t:"Fleumático", txt:"Evitar confronto e acalmar as partes"}
+  ]},
+  { q:"Você prefere trabalhar:", options:[
+    {t:"Sanguíneo", txt:"Em tarefas sociais e dinâmicas"},
+    {t:"Colérico", txt:"Em liderança ou decisões importantes"},
+    {t:"Melancólico", txt:"Em análise e qualidade técnica"},
+    {t:"Fleumático", txt:"Com rotina estável e previsível"}
+  ]},
+  { q:"Num evento, as pessoas te descrevem como:", options:[
+    {t:"Sanguíneo", txt:"Extrovertido e comunicativo"},
+    {t:"Colérico", txt:"Enérgico e direto"},
+    {t:"Melancólico", txt:"Reservado e organizado"},
+    {t:"Fleumático", txt:"Calmo e confiável"}
+  ]},
+  { q:"Ao tomar decisões você costuma:", options:[
+    {t:"Sanguíneo", txt:"Seguir a intuição e o sentimento do momento"},
+    {t:"Colérico", txt:"Agir rapidamente e com firmeza"},
+    {t:"Melancólico", txt:"Pesquisar e avaliar opções"},
+    {t:"Fleumático", txt:"Consultar outros e manter equilíbrio"}
+  ]},
+  { q:"O que te motiva mais no trabalho?", options:[
+    {t:"Sanguíneo", txt:"Interação social e reconhecimento"},
+    {t:"Colérico", txt:"Resultados e desafios"},
+    {t:"Melancólico", txt:"Qualidade e perfeição"},
+    {t:"Fleumático", txt:"Estabilidade e cooperação"}
+  ]},
+  { q:"Você se descreve como alguém que:", options:[
+    {t:"Sanguíneo", txt:"Empolga fácil outras pessoas"},
+    {t:"Colérico", txt:"Assume a responsabilidade"},
+    {t:"Melancólico", txt:"Preocupa-se com o certo e o errado"},
+    {t:"Fleumático", txt:"Procura manter a paz"}
+  ]},
+  { q:"Quando você está em uma situação inesperada, o que faz mais sentido pra você?", options:[
+    {t:"Sanguíneo", txt:"Tento deixar o ambiente leve"},
+    {t:"Colérico", txt:"Tomo a frente e decido rápido"},
+    {t:"Melancólico", txt:"Penso bem antes de agir"},
+    {t:"Fleumático", txt:"Mantenho a calma e espero"}
+  ]}
+];
 
 let current = 0;
+const answers = new Array(questions.length).fill(null);
 
-const answers =
-new Array(questions.length).fill(null);
-
-const qnum =
-document.getElementById('qnum');
-
-const qText =
-document.getElementById('questionText');
-
-const optionsList =
-document.getElementById('optionsList');
-
-const nextBtn =
-document.getElementById('nextBtn');
-
-const backBtn =
-document.getElementById('backBtn');
-
-const progressBar =
-document.getElementById('progressBar');
-
-const resultCard =
-document.getElementById('resultCard');
-
-const quizCard =
-document.getElementById('quizCard');
-
-const capaCard =
-document.getElementById('capaCard');
-
-const resultTitle =
-document.getElementById('resultTitle');
-
-const resultText =
-document.getElementById('resultText');
-
-const restartBtn =
-document.getElementById('restartBtn');
-
-const questionImage =
-document.getElementById('questionImage');
+const qnum = document.getElementById('qnum');
+const qText = document.getElementById('questionText');
+const optionsList = document.getElementById('optionsList');
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+const progressBar = document.getElementById('progressBar');
+const quizCard = document.getElementById('quizCard');
+const resultCard = document.getElementById('resultCard');
+const capaCard = document.getElementById('capaCard');
+const resultTitle = document.getElementById('resultTitle');
+const resultText = document.getElementById('resultText');
+const restartBtn = document.getElementById('restartBtn');
+const questionImage = document.getElementById('questionImage');
 
 function render(){
 
   if(current >= questions.length){
-
     showResult();
-
     return;
   }
 
+  qnum.textContent = `Pergunta ${current+1} de ${questions.length}`;
+
+  progressBar.style.width = ((current/questions.length)*100) + '%';
+
+  // imagem da pergunta
+  const img = questionImages[current];
+  if(img){
+    questionImage.src = img;
+    questionImage.style.display = "block";
+  }
+
   const item = questions[current];
-
-  qnum.textContent =
-  `Pergunta ${current+1} de ${questions.length}`;
-
   qText.textContent = item.q;
-
-  /* IMAGEM */
-  questionImage.src = item.img;
-
-  progressBar.style.width =
-  ((current/questions.length)*100) + '%';
 
   optionsList.innerHTML = '';
 
   item.options.forEach((opt,i)=>{
 
-    const div =
-    document.createElement('div');
-
-    div.className =
-    'option' +
-    (answers[current]===i ? ' selected' : '');
-
+    const div = document.createElement('div');
+    div.className = 'option' + (answers[current]===i ? ' selected' : '');
     div.textContent = opt.txt;
 
     div.onclick = ()=>{
-
       answers[current] = i;
-
-      render();
-
+      Array.from(optionsList.children)
+      .forEach((c,idx)=>{
+        c.classList.toggle('selected',idx===i);
+      });
+      nextBtn.disabled = false;
     };
 
     optionsList.appendChild(div);
-
   });
 
-  backBtn.style.display =
-  current === 0
-  ? 'none'
-  : 'inline-block';
-
-  nextBtn.disabled =
-  answers[current] === null;
+  backBtn.style.display = current===0 ? 'none' : 'inline-block';
 
   nextBtn.textContent =
-  current === questions.length - 1
-  ? 'Ver Resultado'
-  : 'Próxima';
+    current===questions.length-1 ? 'Ver resultado' : 'Próxima';
 
+  nextBtn.disabled = answers[current]===null;
 }
 
 nextBtn.addEventListener('click',()=>{
-
-  if(answers[current] === null) return;
-
+  if(answers[current]===null) return;
   current++;
-
   render();
-
 });
 
 backBtn.addEventListener('click',()=>{
-
-  if(current > 0){
-
+  if(current>0){
     current--;
-
     render();
-
   }
-
 });
 
 function showResult(){
 
   const totals = {
-
     "Sanguíneo":0,
     "Colérico":0,
     "Melancólico":0,
     "Fleumático":0
-
   };
 
-  answers.forEach((ans,index)=>{
-
-    const tipo =
-    questions[index].options[ans].t;
-
+  answers.forEach((ans,qIndex)=>{
+    const tipo = questions[qIndex].options[ans].t;
     totals[tipo]++;
-
   });
 
-  const vencedor =
-  Object.keys(totals).reduce((a,b)=>
-    totals[a] > totals[b] ? a : b
-  );
+  const winner =
+    Object.keys(totals)
+    .reduce((a,b)=> totals[a] > totals[b] ? a : b);
 
-  resultTitle.textContent =
-  resultTexts[vencedor].title;
-
-  resultText.textContent =
-  resultTexts[vencedor].text;
+  resultTitle.textContent = resultTexts[winner].title;
+  resultText.textContent = resultTexts[winner].text;
 
   quizCard.classList.add('hidden');
-
   resultCard.classList.remove('hidden');
-
 }
 
-restartBtn.addEventListener('click',()=>{
-
-  current = 0;
-
-  for(let i=0;i<answers.length;i++){
-
-    answers[i] = null;
-
-  }
-
-  resultCard.classList.add('hidden');
-
-  capaCard.classList.remove('hidden');
-
-});
-
 function iniciarQuiz(){
-
   capaCard.classList.add('hidden');
-
   quizCard.classList.remove('hidden');
-
   render();
-
 }
 
 </script>
